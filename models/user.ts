@@ -9,11 +9,11 @@ export interface IUser {
   password:string
 }
 
-interface userModelInterface extends mongoose.Model<UserDoc> {
-  build(attr: IUser): UserDoc
+interface userModelInterface extends mongoose.Model<IUserDoc> {
+  build(attr: IUser): IUserDoc
 }
 
-interface UserDoc extends mongoose.Document {
+export interface IUserDoc extends mongoose.Document {
   title: string;
   firstName: string;
   surname:string;
@@ -48,15 +48,8 @@ userSchema.statics.build = (attr: IUser) => {
   return new User(attr)
 }
 
-const User = mongoose.model<UserDoc, userModelInterface>('user', userSchema, "users")
+const User = mongoose.model<IUserDoc, userModelInterface>('user', userSchema, "users")
 
-User.build({
-  title: 'some title',
-  firstName:"test",
-  surname:"test",
-  email:"test",
-  password:"test"
-})
 
 export { User }
 
