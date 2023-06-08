@@ -6,8 +6,6 @@ import { instanceOfTypeIUser } from '../lib/typeCheck';
 
 const router = express.Router()
 
-
-
 router.get('/api/users', async (req: Request, res: Response) => {
   const user = await GetAllUsers();
   return res.status(200).send(user)
