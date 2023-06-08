@@ -11,7 +11,6 @@ export const SearchByKey = async function(searchKey: string, personnel: IPersonn
     .filter((x) => x.matchCount > 0);
 
   matches.sort((a, b) => b.matchCount - a.matchCount);
-
   return matches.map((match) => match.personnel);
 }
 
@@ -33,5 +32,5 @@ function ConvertToHashMap(array: string[]): any {
   }, {});
 
   console.log(result);
-  return result;
+  return result;  
 }
