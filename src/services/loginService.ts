@@ -1,6 +1,6 @@
 
-import { ICustomError,IMongoError } from "../../models/errors";
-import { IUser } from "../../models/user";
+import { ICustomError,IMongoError } from "../models/errors";
+import { IUser } from "../models/user";
 import { instanceOfTypeIUser } from "../lib/typeCheck";
 import { GetAllUsers, GetUserByEmail } from "../repositories/usersRepository";
 const bcrypt = require('bcrypt');

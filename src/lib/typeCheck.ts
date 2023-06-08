@@ -1,6 +1,6 @@
-import { ICustomError } from "../../models/errors";
-import { IPersonnel } from "../../models/personnel";
-import { IUser } from "../../models/user";
+import { ICustomError } from "../models/errors";
+import { IPersonnel } from "../models/personnel";
+import { IUser } from "../models/user";
 
 export function instanceOfTypeIUser(object: any): object is IUser {
     return object._id

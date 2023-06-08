@@ -1,5 +1,5 @@
-import { IMongoError } from "../../models/errors";
-import { IUser, IUserDoc, User  } from "../../models/user";
+import { IMongoError } from "../models/errors";
+import { IUser, IUserDoc, User  } from "../models/user";
 
 export const GetAllUsers= async function():Promise<IUser[] | IMongoError>{
     try{

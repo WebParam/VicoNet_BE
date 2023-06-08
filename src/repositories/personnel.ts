@@ -1,6 +1,6 @@
-import { IMongoError } from "../../models/errors";
-import { IPersonnel } from "../../models/personnel";
-import { IUser, IUserDoc, User  } from "../../models/user";
+import { IMongoError } from "../models/errors";
+import { IPersonnel } from "../models/personnel";
+import { IUser, IUserDoc, User  } from "../models/user";
 
 export const GetAllPersonnel= async function():Promise<IPersonnel[] | IMongoError>{
     try{

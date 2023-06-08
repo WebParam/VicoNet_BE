@@ -1,5 +1,5 @@
 
-import { IPersonnel } from "../../models/personnel";
+import { IPersonnel } from "../models/personnel";
 
 export const SearchByKey = async function(searchKey: string, personnel: IPersonnel[]): Promise<IPersonnel[]> {
   const searchKeySet = new Set(searchKey.split(","));

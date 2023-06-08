@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { User, IUser } from '../../models/user'
+import { User, IUser } from '../models/user'
 import { AddUser, GetAllUsers, GetUserById, UpdateUser } from '../repositories/usersRepository';
 import { LoginUser } from '../services/loginService';
 import { instanceOfTypeIUser } from '../lib/typeCheck';
