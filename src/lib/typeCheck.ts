@@ -7,5 +7,5 @@ export function instanceOfTypeIUser(object: any): object is IUser {
 }
 
 export function instanceOfTypeCustomError(object: any): object is ICustomError[] {
-    return object[0].code
+    return object[0]?.code
 }

@@ -1,7 +1,7 @@
 
-import { IPersonnel } from "../models/personnel";
+import { IPersonnel, IPersonnelDoc } from "../models/personnel";
 
-export const SearchByKey = async function(searchKey: string, personnel: IPersonnel[]): Promise<IPersonnel[]> {
+export const SearchByKey = async function(searchKey: string, personnel: IPersonnelDoc[]): Promise<IPersonnelDoc[]> {
   const searchKeySet = new Set(searchKey.split(","));
 
   const matches = personnel
@@ -12,11 +12,13 @@ export const SearchByKey = async function(searchKey: string, personnel: IPersonn
 
   matches.sort((a, b) => b.matchCount - a.matchCount);
   return matches.map((match) => match.personnel);
+  
 }
 
-function CompareHash(searchTerms: string[], personnel: IPersonnel): number {
+function CompareHash(searchTerms: string[], personnel: IPersonnelDoc): number {
   const res = ConvertToHashMap(personnel.searchKeys.split(","));
   const matchCount = searchTerms.reduce((count, term) => {
+  
     if (res[term] === true) {
       return count + 1;
     }
@@ -30,7 +32,21 @@ function ConvertToHashMap(array: string[]): any {
   const result = array.reduce(function (res, obj) {
     return { ...res, [obj]: true };
   }, {});
-
-  console.log(result);
+  console.log("conv",result);
   return result;  
 }
+
+
+export function GenerateSearchKeys(personnel: IPersonnel){
+
+  const skillsKey = personnel.keySkills.split(",").map(x=> `s${x}`).join(",");
+  const coursesKey = personnel.keyCourses.split(",").map(x=> `c${x}`).join(",");
+
+  const fullKey = 
+  `${skillsKey},${coursesKey},${personnel.personalInformation.name},${personnel.personalInformation.surname},${personnel.education.qualification},${personnel.yearsOfExperience}`;
+
+   return fullKey;
+  
+}
+
+
