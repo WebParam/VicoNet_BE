@@ -46,6 +46,7 @@ export interface IPersonnel {
   keyCourses:string;
   cvUrl:string;
   personalInformation:IPersonalInformation;
+  _user:string;
   
 }
 
@@ -54,7 +55,17 @@ interface personnelDocInterface extends mongoose.Model<IPersonnelDoc> {
 }
 
 export interface IPersonnelDoc extends mongoose.Document {
-  searchKeys:string
+  searchKeys:string;
+  information:string;
+  currentJob: IJobInformation;
+  previousWorkExperience:IJobInformation[];
+  yearsOfExperience:string,
+  education:IEducationInformation,
+  keySkills: string;
+  keyCourses:string;
+  cvUrl:string;
+  personalInformation:IPersonalInformation;
+  _user:string;
 }
 
 const personnelSchema = new mongoose.Schema({
@@ -95,6 +106,10 @@ const personnelSchema = new mongoose.Schema({
     required: true
   },
   personalInformation: {
+    type: Object,
+    // required: true
+  },
+  _user: {
     type: Object,
     // required: true
   },

@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+import { IPersonnel } from './personnel';
+import { IStaff } from './staff';
 
 export interface IUser {
   _id?:string;
@@ -6,7 +8,8 @@ export interface IUser {
   firstName: string;
   surname:string;
   email:string;
-  password:string
+  password:string;
+  type:string;
 }
 
 interface userModelInterface extends mongoose.Model<IUserDoc> {
@@ -18,7 +21,8 @@ export interface IUserDoc extends mongoose.Document {
   firstName: string;
   surname:string;
   email:string;
-  password:string
+  password:string;
+  type:string;
 }
 
 const userSchema = new mongoose.Schema({
@@ -42,6 +46,10 @@ const userSchema = new mongoose.Schema({
     type: String, 
     required: true
   },
+  type: {
+    type: Number, 
+    required: true
+  },
 })
 
 userSchema.statics.build = (attr: IUser) => {
@@ -52,6 +60,18 @@ const User = mongoose.model<IUserDoc, userModelInterface>('user', userSchema, "u
 
 
 export { User }
+
+export interface ICreatePersonnelUser{
+
+    user:IUser;
+    personnel:IPersonnel
+
+}
+
+export interface ICreateStaffUser{
+  user:IUser;
+  staff:IStaff;
+}
 
 
 
