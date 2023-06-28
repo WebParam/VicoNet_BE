@@ -36,36 +36,47 @@ const documentService_1 = require("../services/documentService");
 // });
 const router = express_1.default.Router();
 exports.personnelRouter = router;
-router.post('/api/searchPersonnel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/api/searchPersonnel", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchKey } = req.body;
     const personnel = yield (0, personnelRepository_1.GetAllPersonnel)();
     if (!(0, typeCheck_1.instanceOfTypeCustomError)(personnel)) {
         const _personnel = personnel;
-        const result = yield (0, searchService_1.SearchByKey)(searchKey, _personnel);
+        const result = yield (0, searchService_1.SearchByKey)(searchKey.searchKeys, _personnel);
         console.log("RERE", result);
         return res.status(200).send(result);
     }
 }));
-router.post('/api/upload_cv/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/api/upload_cv/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     console.log("TREE", id);
     yield (0, documentService_1.parsefile)(req)
         .then((data) => {
         res.status(200).json({
             message: "Success",
-            data
+            data,
         });
     })
         .catch((error) => {
         res.status(400).json({
             message: "An error occurred.",
-            error
+            error,
         });
     });
 }));
-router.post('/api/personnel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { searchKeys, information, currentJob, previousWorkExperience, yearsOfExperience, education, keySkills, keyCourses, cvUrl, personalInformation } = req.body;
-    const dbUser = { searchKeys, information, currentJob, previousWorkExperience, yearsOfExperience, education, keySkills, keyCourses, cvUrl, personalInformation };
+router.post("/api/personnel", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { searchKeys, information, currentJob, previousWorkExperience, yearsOfExperience, education, keySkills, keyCourses, cvUrl, personalInformation, } = req.body;
+    const dbUser = {
+        searchKeys,
+        information,
+        currentJob,
+        previousWorkExperience,
+        yearsOfExperience,
+        education,
+        keySkills,
+        keyCourses,
+        cvUrl,
+        personalInformation,
+    };
     const user = yield (0, personnelRepository_1.AddPersonnel)(dbUser);
     return res.status(201).send(user);
 }));

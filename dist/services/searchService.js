@@ -15,7 +15,10 @@ const SearchByKey = function (searchKey, personnel) {
         const searchKeySet = new Set(searchKey.split(","));
         const matches = personnel
             .map((x) => {
-            return { matchCount: CompareHash(Array.from(searchKeySet), x), personnel: x };
+            return {
+                matchCount: CompareHash(Array.from(searchKeySet), x),
+                personnel: x,
+            };
         })
             .filter((x) => x.matchCount > 0);
         matches.sort((a, b) => b.matchCount - a.matchCount);
@@ -41,8 +44,14 @@ function ConvertToHashMap(array) {
     return result;
 }
 function GenerateSearchKeys(personnel) {
-    const skillsKey = personnel.keySkills.split(",").map(x => `s${x}`).join(",");
-    const coursesKey = personnel.keyCourses.split(",").map(x => `c${x}`).join(",");
+    const skillsKey = personnel.keySkills
+        .split(",")
+        .map((x) => `s${x}`)
+        .join(",");
+    const coursesKey = personnel.keyCourses
+        .split(",")
+        .map((x) => `c${x}`)
+        .join(",");
     const fullKey = `${skillsKey},${coursesKey},${personnel.personalInformation.name},${personnel.personalInformation.surname},${personnel.education.qualification},${personnel.yearsOfExperience}`;
     return fullKey;
 }
