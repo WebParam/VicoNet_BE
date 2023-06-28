@@ -4,6 +4,7 @@ import { SearchByKey } from "../services/searchService";
 import {
   AddPersonnel,
   GetAllPersonnel,
+  GetPersonnelByUserId,
 } from "../repositories/personnelRepository";
 import { IPersonnel, IPersonnelDoc } from "../models/personnel";
 import { parsefile } from "../services/documentService";
@@ -41,6 +42,22 @@ router.post("/api/searchPersonnel", async (req: Request, res: Response) => {
     return res.status(200).send(result);
   }
 });
+
+router.get(
+  "/api/personnelByUserId/:id",
+  async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const results = await GetPersonnelByUserId(id);
+      console.log("USER", results);
+      return res.status(res.statusCode).send(results);
+    } catch (e) {
+      return res
+        .status(res.statusCode)
+        .json({ error: e.message, message: res.statusMessage });
+    }
+  }
+);
 
 router.post("/api/upload_cv/:id", async (req: Request, res: Response) => {
   const id = req.params.id;

@@ -46,6 +46,19 @@ router.post("/api/searchPersonnel", (req, res) => __awaiter(void 0, void 0, void
         return res.status(200).send(result);
     }
 }));
+router.get("/api/personnelByUserId/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const results = yield (0, personnelRepository_1.GetPersonnelByUserId)(id);
+        console.log("USER", results);
+        return res.status(res.statusCode).send(results);
+    }
+    catch (e) {
+        return res
+            .status(res.statusCode)
+            .json({ error: e.message, message: res.statusMessage });
+    }
+}));
 router.post("/api/upload_cv/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     console.log("TREE", id);

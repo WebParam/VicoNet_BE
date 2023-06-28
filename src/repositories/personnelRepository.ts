@@ -5,60 +5,82 @@ import { ICreatePersonnelUser, IUser } from "../models/user";
 import { GenerateSearchKeys } from "../services/searchService";
 import { AddUser } from "./usersRepository";
 
-export const GetAllPersonnel= async function():Promise<IPersonnelDoc[] | IMongoError>{
-    try{
-        const personnel = await Personnel.find({})
-        return personnel as IPersonnelDoc[];
-        }catch(e){
-            return e as IMongoError;
-        }
-}
+export const GetAllPersonnel = async function (): Promise<
+  IPersonnelDoc[] | IMongoError
+> {
+  try {
+    const personnel = await Personnel.find({});
+    return personnel as IPersonnelDoc[];
+  } catch (e) {
+    return e as IMongoError;
+  }
+};
 
-export const AddPersonnel = async function(_personnel:IPersonnel):Promise<IPersonnelDoc | IMongoError> {
-    try{
-        const searchKeys = GenerateSearchKeys(_personnel);
-        const populated = {..._personnel, searchKeys:searchKeys};
+export const GetPersonnelByUserId = async function (
+  id: string
+): Promise<IPersonnelDoc | IMongoError> {
+  try {
+    const personnel = await Personnel.findOne()
+      .where("_user")
+      .equals(id)
+      .exec();
+    return personnel as IPersonnelDoc;
+  } catch (e) {
+    return e as IMongoError;
+  }
+};
 
-        const personnel = Personnel.build(populated);
-        await personnel.save();
+export const AddPersonnel = async function (
+  _personnel: IPersonnel
+): Promise<IPersonnelDoc | IMongoError> {
+  try {
+    const searchKeys = GenerateSearchKeys(_personnel);
+    const populated = { ..._personnel, searchKeys: searchKeys };
 
-        return personnel;
-    }catch(e){
-        return e as IMongoError;
+    const personnel = Personnel.build(populated);
+    await personnel.save();
+
+    return personnel;
+  } catch (e) {
+    return e as IMongoError;
+  }
+};
+
+export const AddPersonnelUser = async function (
+  _personnel: ICreatePersonnelUser
+): Promise<IPersonnelDoc | IMongoError> {
+  try {
+    _personnel.user.type = "TALENT";
+    const saveUser = await AddUser(_personnel.user);
+    if (instanceOfTypeMongoError(saveUser)) {
+      return saveUser as IMongoError;
     }
-}
+    const searchKeys = GenerateSearchKeys(_personnel.personnel);
+    const userId = saveUser as IUser;
+    const populated = {
+      ..._personnel.personnel,
+      searchKeys: searchKeys,
+      _user: userId._id,
+    } as IPersonnel;
 
-export const AddPersonnelUser = async function(_personnel:ICreatePersonnelUser):Promise<IPersonnelDoc | IMongoError> {
-    try{
-        _personnel.user.type="TALENT";
-        const saveUser = await AddUser(_personnel.user);
-        if(instanceOfTypeMongoError(saveUser)){
-            return saveUser as IMongoError;
-        }
-        const searchKeys = GenerateSearchKeys(_personnel.personnel);
-        const userId = saveUser as IUser;
-        const populated = {..._personnel.personnel, searchKeys:searchKeys, _user:userId._id} as IPersonnel;
-       
-        const personnel = Personnel.build(populated);
-        await personnel.save();
+    const personnel = Personnel.build(populated);
+    await personnel.save();
 
-        return personnel;
-    }catch(e){
-        return e as IMongoError;
-    }
-}
-export const UpdatePersonnel = async function(_personnel:IPersonnel):Promise<IPersonnelDoc | IMongoError> {
-    try{
-        const searchKeys = GenerateSearchKeys(_personnel);
-        const populated = {..._personnel, searchKeys:searchKeys} as IPersonnel;
-        const personnel = Personnel.build(populated);
-        await personnel.updateOne(personnel);
-        return personnel;
-    }catch(e){
-        return e as IMongoError;
-    }
-}
-
-
-
-
+    return personnel;
+  } catch (e) {
+    return e as IMongoError;
+  }
+};
+export const UpdatePersonnel = async function (
+  _personnel: IPersonnel
+): Promise<IPersonnelDoc | IMongoError> {
+  try {
+    const searchKeys = GenerateSearchKeys(_personnel);
+    const populated = { ..._personnel, searchKeys: searchKeys } as IPersonnel;
+    const personnel = Personnel.build(populated);
+    await personnel.updateOne(personnel);
+    return personnel;
+  } catch (e) {
+    return e as IMongoError;
+  }
+};
