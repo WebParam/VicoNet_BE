@@ -19,13 +19,14 @@ const loginService_1 = require("../services/loginService");
 const typeCheck_1 = require("../lib/typeCheck");
 const router = express_1.default.Router();
 exports.userRouter = router;
-router.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/api/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield (0, usersRepository_1.GetAllUsers)();
     return res.status(200).send(user);
 }));
-router.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/api/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) { // valid ObjectId
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        // valid ObjectId
         const user = yield (0, usersRepository_1.GetUserById)(id);
         return res.status(200).send(user);
     }
@@ -33,17 +34,34 @@ router.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.status(404).send("Cannot find user");
     }
 }));
-router.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/api/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, firstName, surname, email, password } = req.body;
     const dbUser = { title, firstName, surname, email, password };
-    const user = yield (0, usersRepository_1.AddUser)(dbUser);
-    return res.status(201).send(user);
+    try {
+        const foundUser = yield (0, usersRepository_1.GetUserByEmail)(email);
+        if (foundUser) {
+            return res.status(409).json({ message: "Email adrress already exists" });
+        }
+        const user = yield (0, usersRepository_1.AddUser)(dbUser);
+        return res.status(201).send(user);
+    }
+    catch (e) {
+        return res.json({ error: e.message });
+    }
 }));
-router.post('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/api/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, firstName, surname, email, password } = req.body;
     const id = req.params.id;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) { // valid ObjectId
-        const dbUser = { title, firstName, surname, email, password, ["_id"]: id };
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        // valid ObjectId
+        const dbUser = {
+            title,
+            firstName,
+            surname,
+            email,
+            password,
+            ["_id"]: id,
+        };
         console.log("user", dbUser);
         const user = yield (0, usersRepository_1.UpdateUser)(dbUser);
         return res.status(201).send(user);
@@ -52,7 +70,7 @@ router.post('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         return res.status(404).send("Cannot find user");
     }
 }));
-router.post('/api/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/api/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     const result = yield (0, loginService_1.LoginUser)(email, password);
     if ((0, typeCheck_1.instanceOfTypeIUser)(result)) {
